@@ -2,23 +2,30 @@ name: Playwright Tests
 
 on:
   push:
-    branches: [ main ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
+    branches: [ main, master ]
 
 jobs:
   test:
     runs-on: ubuntu-latest
+    
     steps:
     - uses: actions/checkout@v4
-    - uses: actions/setup-python@v5
+    
+    - name: Set up Python
+      uses: actions/setup-python@v5
       with:
         python-version: '3.11'
+    
     - name: Install uv
       run: pip install uv
-    - name: Install dependencies and browsers
-      run: |
-        uv sync
-        playwright install --with-deps
+    
+    - name: Install dependencies with uv
+      run: uv sync
+    
     - name: Run Playwright tests
-      run: uv run pytest
+      run: |
+        source .venv/bin/activate
+        python -m playwright install --with-deps
+        uv run pytest --headed
