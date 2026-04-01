@@ -1,10 +1,16 @@
-import re
+import pytest
 from playwright.sync_api import Page, expect
+from pages.login_page import LoginPage
+def test_valid_login_to_orangehrm(page: Page):
+    login_page = LoginPage(page)
+    login_page.login_with_valid_admin()
 
-def test_login_to_orangehrm(page: Page):
+@pytest.mark.parametrize("username,password", 
+                             [("admin","0000"),
+                             ("aadmin","admin123"),
+                             ("aadmin","1111")])
 
-    page.get_by_placeholder("Username").fill("Admin")
-    page.get_by_placeholder("Password").fill("admin123")
 
-    page.get_by_role("button", name="Login").click()
-    expect(page).to_have_title(re.compile("OrangeHRM"))
+def test_login_invalid(page: Page,username,password):
+    login_page = LoginPage(page)
+    login_page.login_with_invalid_admin(username=username,password=password)
