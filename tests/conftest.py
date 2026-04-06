@@ -2,6 +2,15 @@ import pytest
 from playwright.sync_api import Page
 from pages.login_page import LoginPage
 
+@pytest.fixture(scope="session")
+def browser_context_args(browser_context_args):
+    return {
+        **browser_context_args,
+        "viewport": {"width": 1920, "height": 1080},
+    }
+
+
+
 @pytest.fixture(scope="function", autouse=True)
 def goto(page: Page):
     """Fixture to navigate to the base URL."""
@@ -11,3 +20,5 @@ def goto(page: Page):
 @pytest.fixture
 def login_with_admin(page:Page):
     LoginPage(page).login_with_valid_admin()
+
+

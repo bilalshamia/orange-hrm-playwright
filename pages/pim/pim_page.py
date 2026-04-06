@@ -1,5 +1,6 @@
 from playwright.sync_api import Page , expect
 from pages.pim.add_employee import AddEmployeePage
+from pages.pim.employee_list_page import EmployeeListPage
 class PimPage:
     def __init__(self,page : Page):
         self.page=page   
@@ -15,4 +16,5 @@ class PimPage:
 
     def visit_tab_employee_list(self):
         self.page.get_by_text("Employee List").click()
-        expect(self.page.get_by_role("heading", name="Employee List")).to_be_visible()
+        expect(self.page.get_by_text("Employee List")).to_be_visible()
+        return EmployeeListPage(self.page)
